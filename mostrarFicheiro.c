@@ -4,7 +4,7 @@
 /// @brief Mostra ficheiros
 /// @param argc
 /// @param argv
-void main(int argc, char *argv[])
+void showfile(int argc, char *argv[])
 {
   char buffer[4096];
   int i, fo, nread, ntotalwritten, nwritten;
@@ -33,7 +33,7 @@ void main(int argc, char *argv[])
     }
     else
     {
-      write(STDERR_FILENO, " O ficheiro nao existe\n\n", 26);
+      write(STDERR_FILENO, "O ficheiro nao existe\n\n", 23);
     }
   }
 }
