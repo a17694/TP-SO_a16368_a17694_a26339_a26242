@@ -2,6 +2,7 @@
 #include <unistd.h>
 
 /// @brief Mostra ficheiros
+/// @author a17694 - João Ponte
 /// a) mostra ficheiro – Este comando deve apresentar no ecrã (todo) o conteúdo
 /// do ficheiro indicado como parâmetro. Caso o ficheiro não exista, o comando
 /// deve avisar o utilizador que o ficheiro não existe;
