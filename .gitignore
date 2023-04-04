@@ -54,3 +54,5 @@ dkms.conf
 # IDE Folders
 .vscode
 .idea
+/cmake-build-debug/
+/CMakeLists.txt
