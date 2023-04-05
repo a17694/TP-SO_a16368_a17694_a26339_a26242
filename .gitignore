@@ -54,3 +54,4 @@ dkms.conf
 # IDE Folders
 .vscode
 .idea
+.vs
