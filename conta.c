@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * \file   conta.c
+ * \brief  Ficheiro conta.c
+ * 
+ * \author Hugo Silva
+ * \date   April 2023
+ *********************************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
