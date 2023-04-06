@@ -1,5 +1,10 @@
 #include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <time.h>
+#include <pwd.h>
 
 /**
  * @brief f) Informa ficheiros
@@ -76,8 +81,7 @@ void infofile(int argc, char *argv[])
     else
     {
         write(STDOUT_FILENO, "Tipo desconhecido\n", 19);
-        perror("Não encontrado.");
-        exit(1);
+        _exit;
     }
     printf("\tTamanho: %lld bytes\n", info.st_size);
     printf("\tNúmero de inodes: %llu\n", info.st_ino);
@@ -85,5 +89,5 @@ void infofile(int argc, char *argv[])
     printf("\tData de modificação: %d/%d/%d %d:%d:%d\n", tm->tm_mday, tm->tm_mon + 1, tm->tm_year + 1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
     printf("\tData de criação: %d/%d/%d %d:%d:%d\n", ctm->tm_mday, ctm->tm_mon + 1, ctm->tm_year + 1900, ctm->tm_hour, ctm->tm_min, ctm->tm_sec);
     printf("\tData de leitura: %d/%d/%d %d:%d:%d\n", atm->tm_mday, atm->tm_mon + 1, atm->tm_year + 1900, atm->tm_hour, atm->tm_min, atm->tm_sec);
-    return 0;
+    _exit;
 }
