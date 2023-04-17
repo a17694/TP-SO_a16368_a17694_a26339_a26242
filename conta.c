@@ -6,59 +6,45 @@
  * \date   April 2023
  *********************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
-#define MAX_FILE_NAME_LENGTH 256
+int main(int argc, char * argv[]){
+    char c;
+    int fd, i;
+    int linhas = 0;
+    char msg[100];
 
-int main() {
-    char file_name[MAX_FILE_NAME_LENGTH];
-    printf("Digite o nome do arquivo: ");
-    scanf("%s", file_name);
-    count_lines_in_file(file_name);
-    return EXIT_SUCCESS;
-}
-
-
-/**
- * @brief Função que conta o número de linhas em um arquivo.
- *
- * @param file_name Nome do arquivo a ser lido.
- */
-void count_lines_in_file(const char* file_name) {
-    int file_descriptor;
-    int line_count = 0;
-    char prev_char = '\0'; // É um caractere nulo
-    char curr_char;
-
-    // Abre o arquivo em modo leitura
-    file_descriptor = open(file_name, O_RDONLY);
-
-    // Verifica se houve erro na abertura em cima
-    if (file_descriptor == -1) {
-        fprintf(stderr, "Erro ao abrir o arquivo '%s': %s\n", file_name, strerror(errno));
+    if (argc < 2) {
+        write(STDOUT_FILENO, "Falta inserir o nome do arquivo.\n", 33);
         exit(EXIT_FAILURE);
     }
 
-    // Lê um caractere de cada vez
-    while (read(file_descriptor, &curr_char, 1) > 0) {
-        if (curr_char == '\n' && prev_char != '\r') {
-            line_count++;
+    for(i = 1; i < argc; i++){
+        write(STDOUT_FILENO, argv[i], strlen(argv[i]));
+        write(STDOUT_FILENO, "\n", 1);
+
+        fd = open(argv[i], O_RDONLY);
+        if (fd == -1){
+            write(STDOUT_FILENO, "Erro ao mostrar o ficheiro\n", 10);
+            exit(EXIT_FAILURE);
         }
-        prev_char = curr_char;
+        
+        while(read(fd, &c, 1) == 1){
+            if(c == '\n'){
+                linhas++;
+            }
+        }
+        close(fd);
+
+        sprintf(msg, "O numero de linhas deste ficheiro e: %d\n", linhas);
+        write(STDOUT_FILENO, msg, strlen(msg));
+        linhas = 0; // para limpar a variÃ¡vel linhas para quando avanÃ§a para o ficheiro seguinte.
     }
-
-    // Verifica se a última linha do arquivo termina em '\n'
-    if (prev_char != '\n') {
-        line_count++;
-    }
-
-    // Imprime o número de linhas no arquivo
-    printf("O arquivo '%s' contém %d linhas\n", file_name, line_count);
-
-    // Fecha o arquivo
-    close(file_descriptor);
+    return 0;
 }
+
+/**Usei a funÃ§Ã£o sprintf para formatar a mensagem a ser escrita no buffer msg*/
