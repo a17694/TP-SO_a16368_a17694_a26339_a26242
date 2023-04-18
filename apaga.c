@@ -6,60 +6,59 @@
  * \date   April 2023
  *********************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <errno.h>
+#include <stdlib.h>
 
-#define SUCCESS_MESSAGE "Ficheiro '%s' foi eliminado com sucesso\n"
-#define MAX_FILE_NAME_LENGTH 256
+// Define o descritor para saÃ­da padrÃ£o (stdout)
+#define STDOUT_FILENO 1
 
- /**
-  * @brief Função principal que recebe os argumentos da linha de comandos
-  * e chama a função para eliminar cada ficheiro
-  *
-  * @param argc número de argumentos
-  * @param argv vetor com os argumentos
-  * @return int retorna EXIT_SUCCESS se tudo correu bem, senão retorna EXIT_FAILURE
-  */
-int main(int argc, char* argv[]) {
-    char file_name[MAX_FILE_NAME_LENGTH];
-
-    if (argc != 1) {
-        fprintf(stderr, "Uso: %s\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-
-    printf("Insira o nome do ficheiro a eliminar: ");
-    fgets(file_name, MAX_FILE_NAME_LENGTH, stdin);
-    // Remove o caractere de quebra de linha adicionado pelo fgets
-    file_name[strcspn(file_name, "\n")] = 0;
-
-    delete_file(file_name);
-
-    return EXIT_SUCCESS;
-}
+#define SUCCESS_MESSAGE "O ficheiro foi eliminado com sucesso!\n"
+// Comprimento da mensagem de sucesso (sem contar o caractere nulo)
+#define SUCCESS_MESSAGE_LEN 38
 
 /**
- * @brief Elimina o ficheiro com o nome indicado
- *
- * @param file_name nome do ficheiro a eliminar
+ * @brief Calcula o comprimento de uma string.
+ * 
+ * @param str A string a ser medida.
+ * @return O comprimento da string.
  */
-void delete_file(const char* file_name) {
-    int result;
+int length(char* str){
+    int len = 0;
+    // Incrementa o comprimento enquanto o caractere atual nÃ£o for o nulo
+    while (*str != '\0'){
+        len++;
+        str++;
+    }
+    return len;
+}
 
-    result = unlink(file_name);
 
-    if (result == -1) {
-        if (errno == ENOENT) {
-            fprintf(stderr, "Ficheiro '%s' não existe\n", file_name);
+int main(int argc, char *argv[]) {
+    int i;
+    int y;
+    char *success_msg = SUCCESS_MESSAGE;
+
+    // Loop
+    for (i = 1; i < argc; i++) {
+        // Escreve o nome do arquivo na saÃ­da padrÃ£o
+        write(STDOUT_FILENO, argv[i], length(argv[i]));
+        write(STDOUT_FILENO, "\n", 1);
+       
+        // Tenta apagar o arquivo
+        y = unlink(argv[i]);
+
+        if (y < 0) {
+            // Se falhar a eliminar, escreve uma mensagem de erro e sai do programa
+            write(STDERR_FILENO, "O ficheiro nao foi eliminado\n", 30);
+            exit(1);
         }
-        else {
-            fprintf(stderr, "Erro ao eliminar ficheiro '%s': %s\n", file_name, strerror(errno));
+
+        if (y == 0) {
+            // Se eliminar, escreve uma mensagem de sucesso
+            write(STDOUT_FILENO, success_msg, SUCCESS_MESSAGE_LEN);
         }
-        exit(EXIT_FAILURE);
     }
 
-    printf(SUCCESS_MESSAGE, file_name);
+    return 0;
 }
