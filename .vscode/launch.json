@@ -28,7 +28,7 @@
       "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "/workspaces/TP-SO_a16368_a17694_a26339_a26242",
-      "program": "/workspaces/TP-SO_a16368_a17694_a26339_a26242/a.out teste",
+      "program": "/workspaces/TP-SO_a16368_a17694_a26339_a26242/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
