@@ -27,10 +27,14 @@ int main(int argc, char * argv[]){
     }
 
     char linhaOrigem;
-    int i = 0;
+    int i = 0, j = 0;
     while(read(ficheiroOrigem, &linhaOrigem, 1)){
         i++;
     }
+	while(read(acrescentaFicheiro, &linhaOrigem, 1)){
+		ficheiroOrigem[i] = acrescentaFicheiro[j];
+		
+	}
 
 
     	stat(argv[1], &st);
