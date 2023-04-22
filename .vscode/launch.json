@@ -2,23 +2,17 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "C/C++ Runner: Debug Session",
+      "name": "(lldb) Launch",
       "type": "cppdbg",
       "request": "launch",
+      "program": "enter program name, for example ${workspaceFolder}/a.out",
       "args": [],
       "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
       "externalConsole": false,
-      "cwd": "/Users/pedroricardosilva/Library/CloudStorage/OneDrive-InstitutoPolitécnicodoCávadoedoAve/1ano/2_semestre/SistemasOperativos/TrabalhoGrupo/TP-SO_a16368_a17694_a26339_a26242",
-      "program": "/Users/pedroricardosilva/Library/CloudStorage/OneDrive-InstitutoPolitécnicodoCávadoedoAve/1ano/2_semestre/SistemasOperativos/TrabalhoGrupo/TP-SO_a16368_a17694_a26339_a26242/build/Debug/outDebug",
-      "MIMode": "gdb",
-      "miDebuggerPath": "gdb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ]
+      "MIMode": "lldb"
     }
+    
   ]
 }
