@@ -9,7 +9,7 @@ comandos. Qualquer mensagem de erro deverá ser apresentada no descritor stderr,
 não utilize programação shell, funções LibC (fopen, fread, etc…) ou comandos
 pré-existentes para executar a funcionalidade pretendida.
 
-- [ ] a) mostra ficheiro – Este comando deve apresentar no ecrã (todo) o conteúdo
+- [x] a) mostra ficheiro – Este comando deve apresentar no ecrã (todo) o conteúdo
   do ficheiro indicado como parâmetro. Caso o ficheiro não exista, o comando
   deve avisar o utilizador que o ficheiro não existe;
 - [ ] b) copia ficheiro – Este comando deve criar um novo ficheiro, cujo nome é
@@ -19,10 +19,10 @@ pré-existentes para executar a funcionalidade pretendida.
 - [ ] c) acrescenta origem destino – Este comando deve acrescentar (todo) o
   conteúdo da “origem” no final do “destino”. Caso algum dos ficheiros não
   exista, deve ser apresentado um aviso ao utilizador;
-- [ ] d) conta ficheiro – Este comando deve contar o número de linhas existentes
+- [x] d) conta ficheiro – Este comando deve contar o número de linhas existentes
   num ficheiro. Se o ficheiro não existir, deverá ser indicado ao utilizador uma
   mensagem de erro;
-- [ ] e) apaga ficheiro – Este comando deve apagar o ficheiro com o nome indicado.
+- [x] e) apaga ficheiro – Este comando deve apagar o ficheiro com o nome indicado.
   No caso de o ficheiro indicado não existir, e apenas, deve ser apresentado
   um aviso ao utilizador;
 - [ ] f) informa ficheiro – Este comando apresenta apenas a informação do sistema
