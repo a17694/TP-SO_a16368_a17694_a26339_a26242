@@ -6,11 +6,19 @@
  * \date   April 2023
  *********************************************************************/
 
+#include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
-#include <stdio.h>
 #include <pwd.h>
 #include <time.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#ifdef HAVE_ST_BIRTHTIME
+#define birthtime() 1
+#else
+#define birthtime() 0
+#endif
 
 /**
  * @brief Calcula o comprimento de uma string.
@@ -59,29 +67,6 @@ void int_to_str(int num, char *str) {
     }
 }
 
-/**
- * @brief
- * @param string
- * @param string2
- * @param reuslt
- * @return
- */
-int criaString(char *string, char *string2, char *reuslt)
-{
-    int i, tam = sizeof(string) + sizeof (string2);
-    char str[tam];
-    while (string[i] != '\0'){
-        str[i] = string[i];
-        i++;
-    }
-
-    while (string2[i] != '\0'){
-        str[i] = string2[i];
-        i++;
-    }
-    reuslt = str;
-    return tam;
-}
 
 /**
  * @brief Mostra a informação de um ficheiro passado por parâmetro
@@ -100,6 +85,7 @@ void main(int argc, char *argv[])
     int n;
     struct stat file_stat;
     char str[20];
+    struct tm *timeinfo;
 
     if (argc != 2)
     {
@@ -161,38 +147,28 @@ void main(int argc, char *argv[])
     write(STDOUT_FILENO, "\n", 1);
 
     // datas de criação, leitura e modificação em formato textual
-    write(STDOUT_FILENO, "Criação: ", 10);
-    struct tm *timeinfo;
-    timeinfo = localtime(&file_stat.st_ctime);
-    strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
-    write(STDOUT_FILENO, str,  length(str));
-    write(STDOUT_FILENO, "\n", 1);
-
     write(STDOUT_FILENO, "Leitura: ", 9);
     timeinfo = localtime(&file_stat.st_atime);
     strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
     write(STDOUT_FILENO, str,  length(str));
     write(STDOUT_FILENO, "\n", 1);
+    free(timeinfo);
 
     write(STDOUT_FILENO, "Modificação: ", 14);
     timeinfo = localtime(&file_stat.st_mtime);
     strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
     write(STDOUT_FILENO, str,  length(str));
     write(STDOUT_FILENO, "\n", 1);
+    free(timeinfo);
 
-
-//
-//    time_t t = info.st_mtime;
-//    struct tm *tm = localtime(&t);
-//
-//    time_t at = info.st_atime;
-//    struct tm *atm = localtime(&at);
-//
-//    time_t ct = info.st_ctime;
-//    struct tm *ctm = localtime(&ct);
-//
-//    printf("\tData de modificação: %d/%d/%d %d:%d:%d\n", tm->tm_mday, tm->tm_mon + 1, tm->tm_year + 1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
-//    printf("\tData de criação: %d/%d/%d %d:%d:%d\n", ctm->tm_mday, ctm->tm_mon + 1, ctm->tm_year + 1900, ctm->tm_hour, ctm->tm_min, ctm->tm_sec);
-//    printf("\tData de leitura: %d/%d/%d %d:%d:%d\n", atm->tm_mday, atm->tm_mon + 1, atm->tm_year + 1900, atm->tm_hour, atm->tm_min, atm->tm_sec);
-    _exit;
+    write(STDOUT_FILENO, "Criação: ", 10);
+    if(birthtime()){
+        timeinfo = localtime(&file_stat.st_btime);
+        strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
+        write(STDOUT_FILENO, str,  length(str));
+    } else {
+        write(STDOUT_FILENO, "-", 1);
+    }
+    write(STDOUT_FILENO, "\n", 1);
+    free(timeinfo);
 }
