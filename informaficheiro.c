@@ -1,14 +1,90 @@
-#include <sys/types.h>
+/*****************************************************************//**
+ * \file   informaficheiro.c
+ * \brief  Ficheiro informaficheiro.c
+ *
+ * \author João Ponte
+ * \date   April 2023
+ *********************************************************************/
+
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <time.h>
 #include <pwd.h>
+#include <time.h>
 
 /**
- * @brief f) Informa ficheiros
+ * @brief Calcula o comprimento de uma string.
  *
- * @author a17694 - João Ponte
+ * @param str A string a ser medida.
+ * @return O comprimento da string.
+ */
+int length(char* str){
+    int len = 0;
+    while (*str != '\0'){
+        len++;
+        str++;
+    }
+    return len;
+}
+
+/**
+ * @brief Converte um número inteiro numa string.
+ *
+ * @param num O número a ser convertido em string.
+ * @param str O resultado da string.
+ */
+void int_to_str(int num, char *str) {
+    int i = 0, j = 0;
+    char tmp;
+
+    // Se o número for negativo, adiciona um sinal de menos na string.
+    if (num < 0) {
+        str[j++] = '-';
+        num = -num;
+    }
+
+    // Converte cada dígito do número num caractere ASCII.
+    while (num) {
+        str[i++] = num % 10 + '0';
+        num /= 10;
+    }
+
+    str[i--] = '\0'; // Caractere nulo
+
+    // Inverte a ordem dos caracteres na string.
+    while (i > j) {
+        tmp = str[i];
+        str[i--] = str[j];
+        str[j++] = tmp;
+    }
+}
+
+/**
+ * @brief
+ * @param string
+ * @param string2
+ * @param reuslt
+ * @return
+ */
+int criaString(char *string, char *string2, char *reuslt)
+{
+    int i, tam = sizeof(string) + sizeof (string2);
+    char str[tam];
+    while (string[i] != '\0'){
+        str[i] = string[i];
+        i++;
+    }
+
+    while (string2[i] != '\0'){
+        str[i] = string2[i];
+        i++;
+    }
+    reuslt = str;
+    return tam;
+}
+
+/**
+ * @brief Mostra a informação de um ficheiro passado por parâmetro
  *
  * @details Este comando apresenta apenas a informação do sistema
  * de ficheiros em relação ao ficheiro indicado, tipo de ficheiro (normal,
@@ -18,75 +94,105 @@
  * @param argc número de parâmetros
  * @param argv parâmetros
  */
-void infofile(int argc, char *argv[])
+//void infofile(int argc, char *argv[])
+void main(int argc, char *argv[])
 {
     int n;
+    struct stat file_stat;
+    char str[20];
 
     if (argc != 2)
     {
-        write(STDERR_FILENO, "Erro: Argumentos inválidos!\n\n", 29);
+        write(STDERR_FILENO, "Erro: Argumentos inválidos!\n", 29);
         _exit;
     }
 
-    struct stat info;
-    n = stat(argv[1], &info);
+    n = stat(argv[1], &file_stat);
 
     if (n < 0)
     {
-        write(STDERR_FILENO, "Erro: o ficheiro não existe!\n\n", 30);
+        write(STDERR_FILENO, "Erro: o ficheiro não existe!\n", 30);
         _exit;
     }
 
-    struct passwd *pw = getpwuid(info.st_uid);
+    // Nome do ficheiro
+    write(STDOUT_FILENO, "Nome: ", 6);
+    write(STDOUT_FILENO, argv[1],  length(argv[1]));
+    write(STDOUT_FILENO, "\n", 1);
 
-    time_t t = info.st_mtime;
-    struct tm *tm = localtime(&t);
+    // Tamanho do ficheiro
+    int_to_str(file_stat.st_size, str);
+    write(STDOUT_FILENO, "Tamanho: ", 9);
+    write(STDOUT_FILENO, str,  length(str));
+    write(STDOUT_FILENO, " bytes\n", 7);
 
-    time_t at = info.st_atime;
-    struct tm *atm = localtime(&at);
+    // Tipo de ficheiro (normal, diretoria, link, etc.)
+    write(STDOUT_FILENO, "Tipo: ", 6);
+    switch (file_stat.st_mode & S_IFMT){
+        // Ficheiro Normal
+        case S_IFREG: write(STDOUT_FILENO, "Ficheiro Normal", 15); break;
+        // Diretoria
+        case S_IFDIR: write(STDOUT_FILENO, "Diretoria", 9); break;
+        // Dispositivo de caractere
+        case S_IFCHR: write(STDOUT_FILENO, "Dispositivo de caractere", 24);break;
+        // Dispositivo de bloco
+        case S_IFBLK: write(STDOUT_FILENO, "Dispositivo de bloco", 20); break;
+        // Link
+        case S_IFLNK: write(STDOUT_FILENO, "Link", 4); break;
+        // Pipe
+        case S_IFIFO: write(STDOUT_FILENO, "Pipe", 4); break;
+        // Socket
+        case S_IFSOCK: write(STDOUT_FILENO, "Socket", 6); break;
+        // Desconhecido
+        default: write(STDOUT_FILENO, "Desconhecido", 12); break;
+    }
+    write(STDOUT_FILENO, "\n", 1);
 
-    time_t ct = info.st_ctime;
-    struct tm *ctm = localtime(&ct);
+    // i-node
+    int_to_str(file_stat.st_ino, str);
+    write(STDOUT_FILENO, "I-node: ", 8);
+    write(STDOUT_FILENO, str,  length(str));
+    write(STDOUT_FILENO, "\n", 1);
 
-    write(STDOUT_FILENO, "\tTipo: ", 6);
-    if (S_ISREG(info.st_mode))
-    {
-        write(STDOUT_FILENO, "Ficheiro\n", 10);
-    }
-    else if (S_ISDIR(info.st_mode))
-    {
-        write(STDOUT_FILENO, "Diretório\n", 11);
-    }
-    else if (S_ISCHR(info.st_mode))
-    {
-        write(STDOUT_FILENO, "Char Device\n", 13);
-    }
-    else if (S_ISBLK(info.st_mode))
-    {
-        write(STDOUT_FILENO, "Block Device\n", 14);
-    }
-    else if (S_ISFIFO(info.st_mode))
-    {
-        write(STDOUT_FILENO, "FIFO\n", 6);
-    }
-    else if (S_ISLNK(info.st_mode))
-    {
-        write(STDOUT_FILENO, "Link\n", 13);
-    }
-    else if (S_ISSOCK(info.st_mode))
-    {
-        write(STDOUT_FILENO, "Socket\n", 8);
-    }
-    else
-    {
-        write(STDOUT_FILENO, "Tipo desconhecido\n", 19);
-        _exit;
-    }
-    printf("\tTamanho: %lld bytes\n", info.st_size);
-    printf("\tNúmero de inodes: %llu\n", info.st_ino);
-    printf("\tUtilizador: %s\n", pw->pw_name);
-    printf("\tData de modificação: %d/%d/%d %d:%d:%d\n", tm->tm_mday, tm->tm_mon + 1, tm->tm_year + 1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
-    printf("\tData de criação: %d/%d/%d %d:%d:%d\n", ctm->tm_mday, ctm->tm_mon + 1, ctm->tm_year + 1900, ctm->tm_hour, ctm->tm_min, ctm->tm_sec);
-    printf("\tData de leitura: %d/%d/%d %d:%d:%d\n", atm->tm_mday, atm->tm_mon + 1, atm->tm_year + 1900, atm->tm_hour, atm->tm_min, atm->tm_sec);
+    // utilizador dono em formato textual
+    struct passwd *pw = getpwuid(file_stat.st_uid);
+    write(STDOUT_FILENO, "Utilizador dono: ", 17);
+    write(STDOUT_FILENO,  pw->pw_name,  length( pw->pw_name));
+    write(STDOUT_FILENO, "\n", 1);
+
+    // datas de criação, leitura e modificação em formato textual
+    write(STDOUT_FILENO, "Criação: ", 10);
+    struct tm *timeinfo;
+    timeinfo = localtime(&file_stat.st_ctime);
+    strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
+    write(STDOUT_FILENO, str,  length(str));
+    write(STDOUT_FILENO, "\n", 1);
+
+    write(STDOUT_FILENO, "Leitura: ", 9);
+    timeinfo = localtime(&file_stat.st_atime);
+    strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
+    write(STDOUT_FILENO, str,  length(str));
+    write(STDOUT_FILENO, "\n", 1);
+
+    write(STDOUT_FILENO, "Modificação: ", 14);
+    timeinfo = localtime(&file_stat.st_mtime);
+    strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
+    write(STDOUT_FILENO, str,  length(str));
+    write(STDOUT_FILENO, "\n", 1);
+
+
+//
+//    time_t t = info.st_mtime;
+//    struct tm *tm = localtime(&t);
+//
+//    time_t at = info.st_atime;
+//    struct tm *atm = localtime(&at);
+//
+//    time_t ct = info.st_ctime;
+//    struct tm *ctm = localtime(&ct);
+//
+//    printf("\tData de modificação: %d/%d/%d %d:%d:%d\n", tm->tm_mday, tm->tm_mon + 1, tm->tm_year + 1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
+//    printf("\tData de criação: %d/%d/%d %d:%d:%d\n", ctm->tm_mday, ctm->tm_mon + 1, ctm->tm_year + 1900, ctm->tm_hour, ctm->tm_min, ctm->tm_sec);
+//    printf("\tData de leitura: %d/%d/%d %d:%d:%d\n", atm->tm_mday, atm->tm_mon + 1, atm->tm_year + 1900, atm->tm_hour, atm->tm_min, atm->tm_sec);
     _exit;
 }
