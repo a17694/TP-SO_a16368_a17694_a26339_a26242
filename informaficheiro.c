@@ -11,13 +11,12 @@
 #include <pwd.h>
 #include <time.h>
 #include <fcntl.h>
-#include <stdlib.h>
 #include <unistd.h>
 
 #ifdef HAVE_ST_BIRTHTIME
-#define birthtime() 1
+#define birthtime(x) x.st_birthtime
 #else
-#define birthtime() 0
+#define birthtime(x) 0
 #endif
 
 /**
@@ -66,7 +65,6 @@ void int_to_str(int num, char *str) {
         str[j++] = tmp;
     }
 }
-
 
 /**
  * @brief Mostra a informação de um ficheiro passado por parâmetro
@@ -152,23 +150,20 @@ void main(int argc, char *argv[])
     strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
     write(STDOUT_FILENO, str,  length(str));
     write(STDOUT_FILENO, "\n", 1);
-    free(timeinfo);
 
-    write(STDOUT_FILENO, "Modificação: ", 14);
+    write(STDOUT_FILENO, "Modificação: ", 15);
     timeinfo = localtime(&file_stat.st_mtime);
     strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
     write(STDOUT_FILENO, str,  length(str));
     write(STDOUT_FILENO, "\n", 1);
-    free(timeinfo);
 
-    write(STDOUT_FILENO, "Criação: ", 10);
-    if(birthtime()){
-        timeinfo = localtime(&file_stat.st_btime);
+    write(STDOUT_FILENO, "Criação: ", 11);
+    if (birthtime(file_stat) != 0) {
+        timeinfo = localtime(birthtime(file_stat));
         strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
-        write(STDOUT_FILENO, str,  length(str));
+        write(STDOUT_FILENO, str, length(str));
     } else {
         write(STDOUT_FILENO, "-", 1);
     }
     write(STDOUT_FILENO, "\n", 1);
-    free(timeinfo);
 }
