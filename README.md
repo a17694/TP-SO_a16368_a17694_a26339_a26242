@@ -25,7 +25,7 @@ pré-existentes para executar a funcionalidade pretendida.
 - [x] e) apaga ficheiro – Este comando deve apagar o ficheiro com o nome indicado.
   No caso de o ficheiro indicado não existir, e apenas, deve ser apresentado
   um aviso ao utilizador;
-- [ ] f) informa ficheiro – Este comando apresenta apenas a informação do sistema
+- [x] f) informa ficheiro – Este comando apresenta apenas a informação do sistema
   de ficheiros em relação ao ficheiro indicado, tipo de ficheiro (normal,
   diretoria, link, etc.), i-node, utilizador dono em formato textual e datas de
   criação, leitura e modificação em formato textual;

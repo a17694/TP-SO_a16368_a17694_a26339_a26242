@@ -1,6 +1,6 @@
 /*****************************************************************//**
- * \file   mostrarFicheiro.c
- * \brief  Ficheiro mostrarFicheiro.c
+ * \file   mostraficheiro.c
+ * \brief  Ficheiro mostraficheiro.c
  *
  * \author João Ponte
  * \date   April 2023
