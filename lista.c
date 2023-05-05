@@ -1,10 +1,8 @@
 #include <dirent.h>     // Necessário para usar a estrutura 'dirent' e funções como opendir, readdir e closedir
-#include <fcntl.h>      // Necessário para definições relacionadas a arquivos (não é estritamente necessário neste exemplo)
-#include <sys/types.h>  // Necessário para os tipos de dados como 'ino_t', 'mode_t', etc.
 #include <sys/stat.h>   // Necessário para usar a estrutura 'stat' e a função 'lstat'
 #include <unistd.h>     // Necessário para usar funções como 'getcwd' e chamadas de sistema como 'write'
 
-// Função personalizada para copiar e concatenar strings
+// Função para copiar e concatenar strings
 void concatenar_caminho(char *dest, const char *diretoria, const char *nome_arquivo) {
     int i = 0, j = 0;
 
@@ -29,14 +27,22 @@ void concatenar_caminho(char *dest, const char *diretoria, const char *nome_arqu
     dest[i] = '\0';
 }
 
+// Calcular o comprimento da string
+int calcular_comprimento(const char *str) {
+    int len = 0;
+
+    while (str[len] != '\0') {
+        len++;
+    }
+
+    return len;
+}
+
 // Função para escrever uma string usando a chamada de sistema 'write'
 ssize_t escrever_string(int fd, const char *str) {
     ssize_t len = 0;
 
-    // Calcular o comprimento da string
-    while (str[len] != '\0') {
-        len++;
-    }
+    len = calcular_comprimento(str);
 
     // Escrever a string usando a chamada de sistema 'write'
     return write(fd, str, len);
@@ -54,7 +60,7 @@ void lista(const char *nome_diretoria) {
 
     // Verificar se houve algum erro ao abrir o diretório
     if (!diretoria) {
-        escrever_string(2, "opendir: Erro ao abrir o diretorio\n");
+        escrever_string(2, "Erro ao abrir o diretorio\n");
         return;
     }
 
@@ -76,7 +82,7 @@ void lista(const char *nome_diretoria) {
             escrever_string(1, "[FICHEIRO] ");
         }
 
-        //
+        //  
 
         escrever_string(1, entrada->d_name);
         escrever_string(1, "\n");
@@ -90,7 +96,7 @@ int main(int argc, char *argv[]) {
 
     // Verificar se o user forneceu um argumento com o diretório
     if (argc < 2) {
-        static char diretoria_atual[1024];
+        char diretoria_atual[1024];
 
         // Obter o diretório atual se o user não fornecer um
         if (getcwd(diretoria_atual, sizeof(diretoria_atual)) != NULL) {
@@ -108,6 +114,6 @@ int main(int argc, char *argv[]) {
     // Chamar a função 'lista' para listar o conteúdo do diretório alvo
     lista(diretoria_alvo);
 
-    // Retornar 0 para indicar sucesso na execução do programa
+    
     return 0;
 }
