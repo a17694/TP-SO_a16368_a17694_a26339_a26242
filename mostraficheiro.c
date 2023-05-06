@@ -35,17 +35,23 @@ int length(char *str) {
  * @param argc número de parâmetros
  * @param argv parâmetros
  */
-void showfile(int argc, char *argv[]) {
-    char *linha;
-    int i, ficheiroOrigem;
+int main(int argc, char *argv[]) {
+    char *caratere;
+    int i, ficheiroOrigem, result=-1;
 
     // Verifica a quantidade de parâmetro
     if (argc < 2) {
-        write(STDERR_FILENO, "Erro: Não passou qualquer ficheiro como parâmetro!\n", 52);
-        _exit;
+        write(STDERR_FILENO, "Erro: Não passou qualquer ficheiro como parâmetro!\n", 54);
+        return -1;
     } else {
         // Faz um loop ficheiro a ficheiro passado por parâmetro
         for (i = 1; i < argc; i++) {
+
+            // Se nome do ficheiro for vazio
+            if (!argv[i]) {
+                write(STDERR_FILENO, "Erro: Não passou qualquer ficheiro como parâmetro!\n", 54);
+                continue;
+            }
 
             // Abre o ficheiro para leitura
             ficheiroOrigem = open(argv[i], O_RDONLY);
@@ -58,9 +64,9 @@ void showfile(int argc, char *argv[]) {
                 continue;
             }
 
-            // Lê o conteudo do arquivo caractere por caractere
-            while (read(ficheiroOrigem, &linha, 1)) {
-                write(STDOUT_FILENO, &linha, 1);
+            // Lê o conteudo do cada arquivo caractere por caractere
+            while (read(ficheiroOrigem, &caratere, 1)) {
+                write(STDOUT_FILENO, &caratere, 1);
             }
 
             // Dá uma quebra de linha no final de cada ficheiro
@@ -68,6 +74,9 @@ void showfile(int argc, char *argv[]) {
 
             // Fecha o ficheiro
             close(ficheiroOrigem);
+
+            result=1;
         }
+        return result;
     }
 }

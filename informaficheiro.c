@@ -13,10 +13,10 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#ifdef HAVE_ST_BIRTHTIME
-#define birthtime(x) x.st_birthtime
+#ifdef __DARWIN_INODE64
+#define STAT_BIRTHTIME(stat) stat.st_birthtime
 #else
-#define birthtime(x) 0
+#define STAT_BIRTHTIME(stat) 0
 #endif
 
 /**
@@ -78,7 +78,7 @@ void int_to_str(int num, char *str) {
  * @param argv parâmetros
  */
 //void infofile(int argc, char *argv[])
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int n;
     struct stat file_stat;
@@ -88,15 +88,16 @@ void main(int argc, char *argv[])
     if (argc != 2)
     {
         write(STDERR_FILENO, "Erro: Argumentos inválidos!\n", 29);
-        _exit;
+        return -1;
     }
 
+    // Chama função stat
     n = stat(argv[1], &file_stat);
 
     if (n < 0)
     {
         write(STDERR_FILENO, "Erro: o ficheiro não existe!\n", 30);
-        _exit;
+        return -1;
     }
 
     // Nome do ficheiro
@@ -132,38 +133,42 @@ void main(int argc, char *argv[])
     }
     write(STDOUT_FILENO, "\n", 1);
 
-    // i-node
+    // I-node
     int_to_str(file_stat.st_ino, str);
     write(STDOUT_FILENO, "I-node: ", 8);
     write(STDOUT_FILENO, str,  length(str));
     write(STDOUT_FILENO, "\n", 1);
 
-    // utilizador dono em formato textual
+    // Utilizador dono em formato textual
     struct passwd *pw = getpwuid(file_stat.st_uid);
     write(STDOUT_FILENO, "Utilizador dono: ", 17);
     write(STDOUT_FILENO,  pw->pw_name,  length( pw->pw_name));
     write(STDOUT_FILENO, "\n", 1);
 
-    // datas de criação, leitura e modificação em formato textual
+    // Data leitura
     write(STDOUT_FILENO, "Leitura: ", 9);
     timeinfo = localtime(&file_stat.st_atime);
     strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
     write(STDOUT_FILENO, str,  length(str));
     write(STDOUT_FILENO, "\n", 1);
 
+    // Data modificação
     write(STDOUT_FILENO, "Modificação: ", 15);
     timeinfo = localtime(&file_stat.st_mtime);
     strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
     write(STDOUT_FILENO, str,  length(str));
     write(STDOUT_FILENO, "\n", 1);
 
+    // Datas de criação
     write(STDOUT_FILENO, "Criação: ", 11);
-    if (birthtime(file_stat) != 0) {
-        timeinfo = localtime(birthtime(file_stat));
+    if (STAT_BIRTHTIME(file_stat) != 0) {
+        timeinfo = localtime(STAT_BIRTHTIME(&file_stat));
         strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
         write(STDOUT_FILENO, str, length(str));
     } else {
         write(STDOUT_FILENO, "-", 1);
     }
+
     write(STDOUT_FILENO, "\n", 1);
+    return 1;
 }
