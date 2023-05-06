@@ -29,7 +29,7 @@ pré-existentes para executar a funcionalidade pretendida.
   de ficheiros em relação ao ficheiro indicado, tipo de ficheiro (normal,
   diretoria, link, etc.), i-node, utilizador dono em formato textual e datas de
   criação, leitura e modificação em formato textual;
-- [ ] g) lista [directoria] – Este comando deve apresentar uma lista de todas as
+- [x] g) lista [directoria] – Este comando deve apresentar uma lista de todas as
   pastas e ficheiros existentes na directoria indicada ou na diretoria atual se
   não especificada. Adicionalmente, deve distinguir ficheiros simples de
   diretorias através de uma indicação textual.
