@@ -57,6 +57,7 @@ int main() {
         char* command = (char *)malloc(MAX_CMD_LEN);
 
         // Leitura dos comandos através do read()
+
         while((readed = read(STDIN_FILENO, &buffer, 1)) > 0) {
             // @todo verificar se o i corresponde à ultima posição disponivel da string command
 
