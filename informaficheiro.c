@@ -13,10 +13,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#ifdef __DARWIN_64_BIT_INO_T
-#define STAT_BIRTHTIME(stat) (stat).st_birthtime
-#elif __APPLE__
-#define STAT_BIRTHTIME(stat) (stat).st_birthtimespec.tv_sec
+#ifdef __DARWIN_INODE64
+#define STAT_BIRTHTIME(stat) stat.st_birthtime
 #else
 #define STAT_BIRTHTIME(stat) 0
 #endif
@@ -164,7 +162,7 @@ int main(int argc, char *argv[])
     // Datas de criação
     write(STDOUT_FILENO, "Criação: ", 11);
     if (STAT_BIRTHTIME(file_stat) != 0) {
-        timeinfo = localtime(STAT_BIRTHTIME(file_stat));
+        timeinfo = localtime(STAT_BIRTHTIME(&file_stat));
         strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
         write(STDOUT_FILENO, str, length(str));
     } else {
