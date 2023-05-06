@@ -12,7 +12,7 @@ pré-existentes para executar a funcionalidade pretendida.
 - [x] a) mostra ficheiro – Este comando deve apresentar no ecrã (todo) o conteúdo
   do ficheiro indicado como parâmetro. Caso o ficheiro não exista, o comando
   deve avisar o utilizador que o ficheiro não existe;
-- [ ] b) copia ficheiro – Este comando deve criar um novo ficheiro, cujo nome é
+- [x] b) copia ficheiro – Este comando deve criar um novo ficheiro, cujo nome é
   “ficheiro.copia”, cujo conteúdo é uma cópia de (todo) o conteúdo do
   ficheiro passado como parâmetro no comando, com o nome ficheiro. Caso o
   ficheiro não exista, deve ser apresentado um aviso ao utilizador;
