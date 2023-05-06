@@ -1,3 +1,14 @@
+/**
+ * @file copia.c
+ * @author Pedro Silva (a26342@alunos.ipca.pt)
+ * @brief 
+ * @version 0.1
+ * @date 2023-05
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
