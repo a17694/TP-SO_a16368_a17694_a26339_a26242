@@ -67,22 +67,22 @@ $
 
 **.III - Gestão de Sistemas de Ficheiros**
 
-- [ ] a) Num servidor virtual, adicione um disco novo com o tamanho de 10GB (espaço
+- [x] a) Num servidor virtual, adicione um disco novo com o tamanho de 10GB (espaço
   alocado dinamicamente) e crie uma partição.
-- [ ] b) No disco virtual criado na alínea a), deve criar um volume, que ocupe o espaço
+- [x] b) No disco virtual criado na alínea a), deve criar um volume, que ocupe o espaço
   todo, e dentro desse volume, deve adicionar dois volumes lógicos, cada um
   com o tamanho de 5GB.
-- [ ] c) Nos volumes lógicos criados no passo b), crie um sistema de ficheiros ext4 em
+- [x] c) Nos volumes lógicos criados no passo b), crie um sistema de ficheiros ext4 em
   um deles e ext3 no outro.
-- [ ] d) Monte cada um dos sistemas de ficheiros criados em c) nas directorias
+- [x] d) Monte cada um dos sistemas de ficheiros criados em c) nas directorias
   /mnt/ext4 e /mnt/ext3 , respectivamente, ficando persistente a reboots.
-- [ ] e) Dentro da diretoria /mnt/ext4, crie um ficheiro com o nome composto pelo
+- [x] e) Dentro da diretoria /mnt/ext4, crie um ficheiro com o nome composto pelo
   grupo dos números de alunos que constituem o trabalho, e a extensão .txt
   (exemplo: 22222-22233-23333-24003.txt). Esse ficheiro deverá ter, apenas,
   permissões de escrita e leitura para o dono (que será o utilizador que está a
   usar o sistema sem ser root), o grupo não deve ter qualquer permissão neste
   ficheiro, e todos os outros devem ter permissão de leitura.
-- [ ] f) Quais as permissões efetivas que o ficheiro /etc/shadow tem? Indique quais os
+- [x] f) Quais as permissões efetivas que o ficheiro /etc/shadow tem? Indique quais os
   utilizadores que podem escrever nele, ler ou executá-lo.
   Em todos os passos deve descrever os passos necessários, completando a sua resposta
   com os screenshots necessários.
