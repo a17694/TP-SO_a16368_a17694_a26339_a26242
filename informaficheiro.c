@@ -153,14 +153,21 @@ int main(int argc, char *argv[])
     write(STDOUT_FILENO, "\n", 1);
 
     // Data modificação
-    write(STDOUT_FILENO, "Modificação: ", 15);
+    write(STDOUT_FILENO, "Modificado: ", 12);
     timeinfo = localtime(&file_stat.st_mtime);
     strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
     write(STDOUT_FILENO, str,  length(str));
     write(STDOUT_FILENO, "\n", 1);
 
-    // Datas de criação
-    write(STDOUT_FILENO, "Criação: ", 11);
+    // Data da ultima alteração de estado em unix em alguns sistemas é a data de criação
+    write(STDOUT_FILENO, "Alterado: ", 10);
+    timeinfo = localtime(&file_stat.st_ctime);
+    strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
+    write(STDOUT_FILENO, str,  length(str));
+    write(STDOUT_FILENO, "\n", 1);
+
+    // Data de criação
+    write(STDOUT_FILENO, "Criado: ", 8);
     if (STAT_BIRTHTIME(file_stat) != 0) {
         timeinfo = localtime(STAT_BIRTHTIME(&file_stat));
         strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
