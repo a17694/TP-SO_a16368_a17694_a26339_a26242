@@ -1,6 +1,6 @@
 /*****************************************************************//**
- * \file   mostraficheiro.c
- * \brief  Ficheiro mostraficheiro.c
+ * \file   mostra.c
+ * \brief  Ficheiro mostra.c
  *
  * \author João Ponte
  * \date   April 2023
@@ -11,6 +11,7 @@
 
 /**
 * @brief Calcula o comprimento de uma string.
+* @author Hugo Silva
 *
 * @param str A string a ser medida.
 * @return O comprimento da string.
@@ -27,6 +28,7 @@ int length(char *str) {
 /**
  * @brief Mostra o conteúdo de um ou mais ficheiros passados
  * por parâmetro
+ * @author João Ponte
  *
  * @details Este comando apresenta no ecrã o conteúdo
  * do ficheiro indicado como parâmetro. Caso o ficheiro não exista, o comando
@@ -36,8 +38,8 @@ int length(char *str) {
  * @param argv parâmetros
  */
 int main(int argc, char *argv[]) {
-    char *caratere;
-    int i, ficheiroOrigem, result=-1;
+    char *caractere;
+    int i, ficheiroOrigem, result = -1;
 
     // Verifica a quantidade de parâmetro
     if (argc < 2) {
@@ -65,8 +67,8 @@ int main(int argc, char *argv[]) {
             }
 
             // Lê o conteudo do cada arquivo caractere por caractere
-            while (read(ficheiroOrigem, &caratere, 1)) {
-                write(STDOUT_FILENO, &caratere, 1);
+            while (read(ficheiroOrigem, &caractere, 1)) {
+                write(STDOUT_FILENO, &caractere, 1);
             }
 
             // Dá uma quebra de linha no final de cada ficheiro
@@ -75,7 +77,7 @@ int main(int argc, char *argv[]) {
             // Fecha o ficheiro
             close(ficheiroOrigem);
 
-            result=1;
+            result = 1;
         }
         return result;
     }
