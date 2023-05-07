@@ -108,8 +108,8 @@ int main(){
 
         time_t now = time(NULL);
         struct tm *timeinfo = localtime(&now);
-        char buffer[13];
-        strftime(buffer, sizeof(buffer), "\033[34mTP->%Hh%Mm \033[0m ", timeinfo);
+        char buffer[58];
+        strftime(buffer, sizeof(buffer), "\033[34mTrabalho Pratico Sistemas Operativos -> %Hh%Mm \033[0m ", timeinfo);
         write(STDOUT_FILENO, buffer, sizeof(buffer)-1);
         write(STDOUT_FILENO, "\033[31m%\033[0m", 10);
         write(STDOUT_FILENO, "\033[0m", 4);
@@ -126,6 +126,11 @@ int main(){
             }
         }
     #pragma endregion
+
+    #pragma region versao 2
+
+    #pragma endregion
+
     //de cima recebemos um char com o comando que foi digitado pelo utilizador
     //pode temos de dividir por espaços.
 
