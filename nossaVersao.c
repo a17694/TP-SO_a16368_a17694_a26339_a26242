@@ -75,7 +75,7 @@ char ** dividirComando(char* string) {
     char* aux_string;
 
     char ** ret = malloc(sizeof (char *) * 1);
-
+    
     int argumentos = 0;
     aux_string = strtok(string, " ");
     while (aux_string != NULL) {
@@ -131,57 +131,60 @@ int main(){
 
     #pragma endregion
 
-    //de cima recebemos um char com o comando que foi digitado pelo utilizador
-    //pode temos de dividir por espaços.
+    if(cmd[0] != '\0'){//esta validação!
 
-    char** argumentos = dividirComando(cmd);
+        //de cima recebemos um char com o comando que foi digitado pelo utilizador
+        //pode temos de dividir por espaços.
+        char** argumentos = dividirComando(cmd);
+        if(compararString(argumentos[0], "Linus") == 0){
+            write(STDOUT_FILENO, "\n", 1);
+            exit(EXIT_SUCCESS);
+        }
 
-    if(compararString(argumentos[0], "Linus") == 0){
-        write(STDOUT_FILENO, "\n", 1);
-        exit(EXIT_SUCCESS);
-    }
+        
 
-    int estado;//Variavel que guarda o estado do processo, será passado como apontador
-    int pid;
-    if((pid = fork()) == 0){ // o filho vai executar o comando pelo path
-        printf("Processo filho:\n");
-        int filho = execvp(argumentos[0], argumentos);//vai executar o que comando que foi passado e todos os argumentos
-        printf("Comando nao encontrado (comando enviado:%s) no filho %d\n", argumentos[0] ,filho);
-    }else if(pid > 0){
-        //Processo pai, a nossa sheel
-        //Tem de esperar que o filho termine
-        do{
-            //temos de fazer loop, enquanto o filho nao terminar
-            // aqui vamos monotorizar o estado do processo filho
-            //Lista de comandos:
-            //WIFEXITED - retorna um valor diferente de zero se o procedimento (filho) terminou normalmente, e zero caso contrario
-            //WIFSIGNALED - Se tiver terminado (kill) por um sinal retorna um valor diferente de zero. Se terminar (kill) normalmente, com uma codigo de saida, retorna zero
-            //WIFSTOPPED - Se tiver parado por um sinal retorna um valor diferente de zero. Se parar normalmente, com uma codigo de saida, retorna zero
-            //WIFCONTINUED - Se o processo filho continuar após ter sido parado retorna um valor diferente de zero. Caso contraio retorna zero.
-            int valor = wait(&estado);
-            if(valor == -1){ //se der erro na espera informa erro e retorna falha -1
-                write(STDERR_FILENO, "Erro na espera do pai\n", 16);
-                exit(EXIT_FAILURE);
-            }else{
-                if(WIFEXITED(estado)){//retorna um valor diferente de zero se o procedimento (filho) terminou normalmente
-                    write(STDOUT_FILENO, "Processo filho terminou normailmente\n", 38);
-                }else if (WIFSIGNALED(estado)){//Se tiver terminado (kill) por um sinal retorna um valor diferente de zero
-                    write(STDOUT_FILENO, "Processo filho terminou(kill) com signal\n",42);
-                }else if (WIFSTOPPED(estado)){//Se tiver parado por um sinal retorna um valor diferente de zero.
-                    write(STDOUT_FILENO, "Processo filho parou com signal\n", 33);
-                }else if (WIFCONTINUED(estado)){//Se o processo filho continuar após ter sido parado retorna um valor diferente de zero
-                    write(STDOUT_FILENO, "Processo filho continua\n", 25);
+        int estado;//Variavel que guarda o estado do processo, será passado como apontador
+        int pid;
+        if((pid = fork()) == 0){ // o filho vai executar o comando pelo path
+            printf("Processo filho:\n");
+            int filho = execvp(argumentos[0], argumentos);//vai executar o que comando que foi passado e todos os argumentos
+            printf("Comando nao encontrado (comando enviado:%s) no filho %d\n", argumentos[0] ,filho);
+        }else if(pid > 0){
+            //Processo pai, a nossa sheel
+            //Tem de esperar que o filho termine
+            do{
+                //temos de fazer loop, enquanto o filho nao terminar
+                // aqui vamos monotorizar o estado do processo filho
+                //Lista de comandos:
+                //WIFEXITED - retorna um valor diferente de zero se o procedimento (filho) terminou normalmente, e zero caso contrario
+                //WIFSIGNALED - Se tiver terminado (kill) por um sinal retorna um valor diferente de zero. Se terminar (kill) normalmente, com uma codigo de saida, retorna zero
+                //WIFSTOPPED - Se tiver parado por um sinal retorna um valor diferente de zero. Se parar normalmente, com uma codigo de saida, retorna zero
+                //WIFCONTINUED - Se o processo filho continuar após ter sido parado retorna um valor diferente de zero. Caso contraio retorna zero.
+                int valor = wait(&estado);
+                if(valor == -1){ //se der erro na espera informa erro e retorna falha -1
+                    write(STDERR_FILENO, "Erro na espera do pai\n", 16);
+                    exit(EXIT_FAILURE);
+                }else{
+                    if(WIFEXITED(estado)){//retorna um valor diferente de zero se o procedimento (filho) terminou normalmente
+                        write(STDOUT_FILENO, "Processo filho terminou normailmente\n", 38);
+                    }else if (WIFSIGNALED(estado)){//Se tiver terminado (kill) por um sinal retorna um valor diferente de zero
+                        write(STDOUT_FILENO, "Processo filho terminou(kill) com signal\n",42);
+                    }else if (WIFSTOPPED(estado)){//Se tiver parado por um sinal retorna um valor diferente de zero.
+                        write(STDOUT_FILENO, "Processo filho parou com signal\n", 33);
+                    }else if (WIFCONTINUED(estado)){//Se o processo filho continuar após ter sido parado retorna um valor diferente de zero
+                        write(STDOUT_FILENO, "Processo filho continua\n", 25);
+                    }
                 }
-            }
-        }while(!WIFEXITED(estado) && !WIFSIGNALED(estado));//executa enquanto o filho nao terminar
-    }else{
-        write(STDERR_FILENO, mesagemErro, sizeof(mesagemErro));
+            }while(!WIFEXITED(estado) && !WIFSIGNALED(estado));//executa enquanto o filho nao terminar
+        }else{
+            write(STDERR_FILENO, mesagemErro, sizeof(mesagemErro));
+        }
+        
+        printf("Comando %s\tArgumentos %s\n", cmd, argumentos[1]);
     }
 
-    printf("Comando %s\tArgumentos %s\n", cmd, argumentos[1]);
     free(cmd);
-    free(argumentos);
-    cmd[0] = 0;
+
     }//final do while(1)
     return EXIT_SUCCESS;
     }
