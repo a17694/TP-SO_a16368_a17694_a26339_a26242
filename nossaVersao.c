@@ -1,5 +1,5 @@
 /**
- * @file nossaVersao.c
+ * @file interpretador.c
  * @author Pedro Silva (a26342@alunos.ipca.pt)
  * @brief 
  * @version 0.1
@@ -9,49 +9,15 @@
  * 
  */
 
-//#include "nossaVersao.h"
 #include <unistd.h>
 #include <sys/wait.h>
-#include <stdio.h>
 #include <stdlib.h> 
-#include <string.h>
-#include <fcntl.h>//open file, testes
-#include <time.h>
+#include <string.h>//strtok()
+#include <time.h>//Para as horas no promtp
+#include <error.h>//tratamento de erros
 
 #define LEN 1024
 
-
-#pragma region Listas
-typedef struct Comando{
-    char* comandoEnviado;
-    int argNumber;
-    struct Comando* next;
-}Comando;
-
-Comando* CriarComando(char* cmd){
-    Comando* c;// = (Comando*) malloc(sizeof(Comando));
-    c->comandoEnviado = cmd;
-    return c;
-}
-
-int InserirComandos(Comando** head, Comando* c){
-    Comando* novo = (Comando*) malloc(sizeof(Comando));
-    if(novo != NULL) {
-        novo->comandoEnviado = c->comandoEnviado;
-        novo->next = *head;
-        *head = novo;
-        return 1;
-    }
-    return -1;
-}
-
-int PrintComando(Comando* head){
-    if(head == NULL) return -1;
-    printf("%s", head->comandoEnviado);
-
-    return PrintComando(head->next);
-}
-#pragma endregion
 
 /// @brief Compara 2 strings
 /// @param str1 
@@ -66,22 +32,26 @@ int compararString(const char* str1, const char* str2) {
         }
         i++;
     }
-    return 0;
+    if(str1[i] == '\0' && str2[i] == '\0'){
+        return 0;
+    }else{
+        return -1;
+    }
 }
 
 //esta é a funcao original
 char ** dividirComando(char* string) {
 
-    char* aux_string;
+    char* aux;
 
     char ** ret = malloc(sizeof (char *) * 1);
     
     int argumentos = 0;
-    aux_string = strtok(string, " ");
-    while (aux_string != NULL) {
-        ret[argumentos] = aux_string;
+    aux = strtok(string, " ");
+    while (aux != NULL) {
+        ret[argumentos] = aux;
 
-        aux_string = strtok(NULL, " ");
+        aux = strtok(NULL, " ");
         argumentos++;
         // Aumenta o tamanho do array
         ret = realloc(ret,sizeof (char *) * argumentos + 1);
@@ -115,7 +85,7 @@ int main(){
         write(STDOUT_FILENO, "\033[0m", 4);
         write(STDOUT_FILENO," ", 1);
 
-    #pragma region versao 1 //tentar fazer com listas
+        //ler os dados pelo utilizador
         while((aux = read(STDIN_FILENO, &ler, 1)) > 0){
             if(ler == '\n'){
                 cmd[i] = '\0';
@@ -125,30 +95,23 @@ int main(){
                 i++;
             }
         }
-    #pragma endregion
 
-    #pragma region versao 2
-
-    #pragma endregion
-
-    if(cmd[0] != '\0'){//esta validação!
-
+    if( cmd[0] != '\0'){//Caso tenha apenas 1 enter faz o fork()
+    
         //de cima recebemos um char com o comando que foi digitado pelo utilizador
         //pode temos de dividir por espaços.
         char** argumentos = dividirComando(cmd);
-        if(compararString(argumentos[0], "Linus") == 0){
-            write(STDOUT_FILENO, "\n", 1);
-            exit(EXIT_SUCCESS);
+        if(compararString(cmd, "termina") == 0){
+            write(STDOUT_FILENO, "Terminou comando lista com código 0\n", 38);
+            break;
         }
-
-        
 
         int estado;//Variavel que guarda o estado do processo, será passado como apontador
         int pid;
         if((pid = fork()) == 0){ // o filho vai executar o comando pelo path
-            printf("Processo filho:\n");
+            
             int filho = execvp(argumentos[0], argumentos);//vai executar o que comando que foi passado e todos os argumentos
-            printf("Comando nao encontrado (comando enviado:%s) no filho %d\n", argumentos[0] ,filho);
+            exit(0);
         }else if(pid > 0){
             //Processo pai, a nossa sheel
             //Tem de esperar que o filho termine
@@ -162,11 +125,11 @@ int main(){
                 //WIFCONTINUED - Se o processo filho continuar após ter sido parado retorna um valor diferente de zero. Caso contraio retorna zero.
                 int valor = wait(&estado);
                 if(valor == -1){ //se der erro na espera informa erro e retorna falha -1
-                    write(STDERR_FILENO, "Erro na espera do pai\n", 16);
+                    write(STDERR_FILENO, "Erro na espera do pai\n", 23);
                     exit(EXIT_FAILURE);
                 }else{
                     if(WIFEXITED(estado)){//retorna um valor diferente de zero se o procedimento (filho) terminou normalmente
-                        write(STDOUT_FILENO, "Processo filho terminou normailmente\n", 38);
+                        write(STDOUT_FILENO, "Processo filho terminou normalmente\n", 37);
                     }else if (WIFSIGNALED(estado)){//Se tiver terminado (kill) por um sinal retorna um valor diferente de zero
                         write(STDOUT_FILENO, "Processo filho terminou(kill) com signal\n",42);
                     }else if (WIFSTOPPED(estado)){//Se tiver parado por um sinal retorna um valor diferente de zero.
@@ -178,13 +141,11 @@ int main(){
             }while(!WIFEXITED(estado) && !WIFSIGNALED(estado));//executa enquanto o filho nao terminar
         }else{
             write(STDERR_FILENO, mesagemErro, sizeof(mesagemErro));
+            exit(EXIT_FAILURE);
         }
         
-        printf("Comando %s\tArgumentos %s\n", cmd, argumentos[1]);
     }
-
     free(cmd);
-
     }//final do while(1)
-    return EXIT_SUCCESS;
+
     }
