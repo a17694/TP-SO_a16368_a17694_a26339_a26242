@@ -97,14 +97,14 @@ int main(){
         }
 
     if( cmd[0] != '\0'){//Caso tenha apenas 1 enter faz o fork()
-    
-        //de cima recebemos um char com o comando que foi digitado pelo utilizador
-        //pode temos de dividir por espaços.
-        char** argumentos = dividirComando(cmd);
+
         if(compararString(cmd, "termina") == 0){
             write(STDOUT_FILENO, "Terminou comando lista com código 0\n", 38);
             break;
         }
+        //de cima recebemos um char com o comando que foi digitado pelo utilizador
+        //pode temos de dividir por espaços.
+        char** argumentos = dividirComando(cmd);
 
         int estado;//Variavel que guarda o estado do processo, será passado como apontador
         int pid;
