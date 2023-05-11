@@ -111,7 +111,8 @@ int main(){
         if((pid = fork()) == 0){ // o filho vai executar o comando pelo path
             
             int filho = execvp(argumentos[0], argumentos);//vai executar o que comando que foi passado e todos os argumentos
-            exit(0);
+            write(STDERR_FILENO, "Comando não foi encontrado\n", 29);
+
         }else if(pid > 0){
             //Processo pai, a nossa sheel
             //Tem de esperar que o filho termine
@@ -129,13 +130,13 @@ int main(){
                     exit(EXIT_FAILURE);
                 }else{
                     if(WIFEXITED(estado)){//retorna um valor diferente de zero se o procedimento (filho) terminou normalmente
-                        write(STDOUT_FILENO, "Processo filho terminou normalmente\n", 37);
+                        write(STDOUT_FILENO, "\nProcesso filho terminou normalmente\n", 38);
                     }else if (WIFSIGNALED(estado)){//Se tiver terminado (kill) por um sinal retorna um valor diferente de zero
-                        write(STDOUT_FILENO, "Processo filho terminou(kill) com signal\n",42);
+                        write(STDOUT_FILENO, "\nProcesso filho terminou(kill) com signal\n",43);
                     }else if (WIFSTOPPED(estado)){//Se tiver parado por um sinal retorna um valor diferente de zero.
-                        write(STDOUT_FILENO, "Processo filho parou com signal\n", 33);
+                        write(STDOUT_FILENO, "\nProcesso filho parou com signal\n", 34);
                     }else if (WIFCONTINUED(estado)){//Se o processo filho continuar após ter sido parado retorna um valor diferente de zero
-                        write(STDOUT_FILENO, "Processo filho continua\n", 25);
+                        write(STDOUT_FILENO, "\nProcesso filho continua\n", 26);
                     }
                 }
             }while(!WIFEXITED(estado) && !WIFSIGNALED(estado));//executa enquanto o filho nao terminar
