@@ -36,14 +36,14 @@ pré-existentes para executar a funcionalidade pretendida.
 
 **.II Implementação de um interpretador de linha de comandos**
 
-- [ ] No sentido de substituir o interpretador de comandos habitual, Bash shell, por um
+- [x] No sentido de substituir o interpretador de comandos habitual, Bash shell, por um
 novo interpretador personalizado, deve ser implementada uma aplicação, de nome
 interpretador, cuja função será a leitura de uma sequência de caracteres da consola, e
 em seguida executar essa sequência como um comando e respetivos argumentos no
 sistema. O programa deve mostrar o símbolo “%” como indicação de que está pronto
 para ler um novo comando do utilizador.
 
-- [ ] O programa deve executar o comando através de primitivas de execução genérica de
+- [x] O programa deve executar o comando através de primitivas de execução genérica de
 processos tendo como referência a funcionalidade da função system(3), mas **sem fazer
 uso da mesma**. Cada comando escrito deve dar origem a um novo processo.
 Adicionalmente, pode considerar que a execução do interpretador deve ser suspensa
