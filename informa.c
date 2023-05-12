@@ -6,7 +6,7 @@
  * \date   April 2023
  *********************************************************************/
 
-// Fornece funções para obter informação sobre os ficheiros (ex: getpwuid)
+// Fornece funções para obter informação sobre os ficheiros (ex: stat)
 #include <sys/stat.h>
 // Fornece funções para obter informação sobre o utilizador (ex: getpwuid)
 #include <pwd.h>
