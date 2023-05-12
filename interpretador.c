@@ -14,7 +14,6 @@
 #include <stdlib.h> 
 #include <string.h>//strtok()
 #include <time.h>//Para as horas no promtp
-#include <error.h>//tratamento de erros
 
 #define LEN 1024
 
@@ -39,7 +38,7 @@ int compararString(const char* str1, const char* str2) {
     }
 }
 
-//esta é a funcao original
+// Divide o comando
 char ** dividirComando(char* string) {
 
     char* aux;
