@@ -2,17 +2,24 @@
  * \file   informa.c
  * \brief  Ficheiro informa.c
  *
- * \author João Ponte
+ * \author João Ponte (a17694@alunos.ipca.pt)
  * \date   April 2023
  *********************************************************************/
 
-#include <sys/types.h>
+// Fornece funções para obter informação sobre os ficheiros (ex: getpwuid)
 #include <sys/stat.h>
+// Fornece funções para obter informação sobre o utilizador (ex: getpwuid)
 #include <pwd.h>
+// Fornece funções para manipulação das datas (ex: localtime)
 #include <time.h>
+// Fornece funções para manipulação dos descritores de ficheiros (ex: open, close)
 #include <fcntl.h>
+// Fornece funções relacionadas com o sistema operativo (ex: write, read)
 #include <unistd.h>
 
+// Função que verifica se existe a constante __DARWIN_INODE64, caso seja verdade
+// devolve a data de criação do ficheiro visto utilizar um sistema de ficheiros
+// que inclui o atributo st_birthtime, caso contrário devolve 0
 #ifdef __DARWIN_INODE64
 #define STAT_BIRTHTIME(stat) stat.st_birthtime
 #else
@@ -73,12 +80,14 @@ void int_to_str(int num, char *str) {
  * @author João Ponte
  *
  * @details Este comando apresenta apenas a informação do sistema
- * de ficheiros em relação ao ficheiro indicado, tipo de ficheiro (normal,
- * diretoria, link, etc.), i-node, utilizador dono em formato textual e datas de
- * criação, leitura e modificação em formato textual;
+ *          de ficheiros em relação ao ficheiro indicado, tipo de ficheiro (normal,
+ *          diretoria, link, etc.), i-node, utilizador dono em formato textual e datas de
+ *          criação, leitura e modificação em formato textual;
  *
  * @param argc número de parâmetros
  * @param argv parâmetros
+ * @return 1 sucesso
+ *        -1 erro
  */
 int main(int argc, char *argv[]) {
     int n;
@@ -86,14 +95,16 @@ int main(int argc, char *argv[]) {
     char str[20];
     struct tm *timeinfo;
 
+    // Verifica se foram passados parâmetros
     if (argc != 2) {
-        write(STDERR_FILENO, "Erro: Argumentos inválidos!\n", 29);
+        write(STDERR_FILENO, "Erro: Parâmetros inválidos!\n", 29);
         return -1;
     }
 
-    // Chama função stat
+    // Usa função stat para obter os dados do ficheiro
     n = stat(argv[1], &file_stat);
 
+    // Verifica se ocorreu erro na função stat
     if (n < 0) {
         write(STDERR_FILENO, "Erro: o ficheiro não existe!\n", 30);
         return -1;
@@ -174,7 +185,7 @@ int main(int argc, char *argv[]) {
     write(STDOUT_FILENO, str, length(str));
     write(STDOUT_FILENO, "\n", 1);
 
-    // Data da ultima alteração de estado em unix em alguns sistemas é a data de criação
+    // Data da ultima alteração de estado
     write(STDOUT_FILENO, "Alterado: ", 10);
     timeinfo = localtime(&file_stat.st_ctime);
     strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
@@ -183,6 +194,7 @@ int main(int argc, char *argv[]) {
 
     // Data de criação
     write(STDOUT_FILENO, "Criado: ", 8);
+    // verifica se a função STAT_BIRTHTIME contem data de criação do ficheiro
     if (STAT_BIRTHTIME(file_stat) != 0) {
         timeinfo = localtime(STAT_BIRTHTIME(&file_stat));
         strftime(str, sizeof(str), "%Y/%m/%d %H:%M:%S", timeinfo);
@@ -192,5 +204,6 @@ int main(int argc, char *argv[]) {
     }
 
     write(STDOUT_FILENO, "\n", 1);
+
     return 1;
 }
