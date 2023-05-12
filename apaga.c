@@ -56,9 +56,9 @@ int main(int argc, char *argv[]) {
         y = unlink(argv[i]);
 
         if (y < 0) {
-            // Se falhar a eliminar, escreve uma mensagem de erro e sai do programa
+            // Se falhar a eliminar, escreve uma mensagem de erro
             write(STDERR_FILENO, "O ficheiro nao foi eliminado\n", 30);
-            exit(1);
+            continue;
         }
 
         if (y == 0) {
