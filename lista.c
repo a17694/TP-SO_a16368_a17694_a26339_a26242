@@ -1,3 +1,11 @@
+/*****************************************************************//**
+ * \file   informa.c
+ * \brief  Ficheiro informa.c
+ *
+ * \author Hugo Poças (a26339@alunos.ipca.pt)
+ * \date   April 2023
+ *********************************************************************/
+
 #include <dirent.h>     // Necessário para usar a estrutura 'dirent' e funções como opendir, readdir e closedir
 #include <sys/stat.h>   // Necessário para usar a estrutura 'stat' e a função 'lstat'
 #include <unistd.h>     // Necessário para usar funções como 'getcwd' e chamadas de sistema como 'write'

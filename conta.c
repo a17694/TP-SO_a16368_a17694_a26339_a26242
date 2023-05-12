@@ -2,7 +2,7 @@
  * \file   conta.c
  * \brief  Ficheiro conta.c
  * 
- * \author Hugo Silva
+ * \author Hugo Silva (a16368@alunos.ipca.pt)
  * \date   April 2023
  *********************************************************************/
 

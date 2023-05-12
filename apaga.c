@@ -2,7 +2,7 @@
  * \file   apaga.c
  * \brief  Ficheiro apaga.c
  * 
- * \author Hugo Silva
+ * \author Hugo Silva (a16368@alunos.ipca.pt)
  * \date   April 2023
  *********************************************************************/
 
