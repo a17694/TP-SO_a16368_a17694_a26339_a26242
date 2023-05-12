@@ -9,7 +9,7 @@
  * 
  */
 
-#include "nossaVersao.h"
+#include "interpretador.h"
 
 Comando* CriarComando(char* cmd){
     Comando* c = (Comando*) malloc(sizeof(Comando));
