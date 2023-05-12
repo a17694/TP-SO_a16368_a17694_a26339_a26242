@@ -2,7 +2,7 @@
  * \file   mostra.c
  * \brief  Ficheiro mostra.c
  *
- * \author João Ponte
+ * \author João Ponte (a17694@alunos.ipca.pt)
  * \date   April 2023
  *********************************************************************/
 
@@ -34,15 +34,17 @@ int length(char *str) {
  * @details Este comando apresenta no ecrã o conteúdo do ficheiro ou ficheiros indicados como parâmetro.
  *          Caso o ficheiro não exista, o comando avisa o utilizador que o mesmo não existe.
  *
- * @param argc O número de parâmetros passados para o programa.
- * @param argv Um array de strings contendo os parâmetros passados para o programa.
+ * @param argc O número de parâmetros passados.
+ * @param argv Um array de strings com os parâmetros passados.
  *             O primeiro elemento (índice 0) é o nome do programa em si.
- *             Os elementos subsequentes contêm os nomes dos ficheiros a serem exibidos.
- * @return 1 se pelo menos um ficheiro foi exibido com sucesso, ou -1 se nenhum ficheiro foi passado como parâmetro.
+ *             Os elementos seguintes contêm os nomes dos ficheiros a serem apresentados.
+ * @return 1 se pelo menos um ficheiro foi apresentado com sucesso
+ *         0 se não apresentou nenhum ficheiro
+ *        -1 se nenhum ficheiro foi passado como parâmetro
  */
 int main(int argc, char *argv[]) {
     char *caractere;
-    int i, ficheiroOrigem, result = -1;
+    int i, ficheiroOrigem, result = 0;
 
     // Verifica se foram passados parâmetros
     if (argc < 2) {
