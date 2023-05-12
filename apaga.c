@@ -39,6 +39,13 @@ int main(int argc, char *argv[]) {
     int y;
     char *success_msg = SUCCESS_MESSAGE;
 
+    // Verifica se o número de argumentos é válido
+    if (argc <= 1) {
+        write(STDERR_FILENO, "Nenhum ficheiro especificado para eliminação.\n", 46);
+        exit(1);
+    }
+
+
     // Loop
     for (i = 1; i < argc; i++) {
         // Escreve o nome do arquivo na saída padrão

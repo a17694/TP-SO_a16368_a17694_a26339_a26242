@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
         j++;
     }
     //apenas dá um enter
-    nome[i] = '\n';
+    nome[i] = '\0';
     
     ficheiroDestino = open(nome, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 
