@@ -6,7 +6,9 @@
  * \date   April 2023
  *********************************************************************/
 
+// Fornece funções para manipulação dos descritores de ficheiros (ex: open, close)
 #include <fcntl.h>
+// Fornece funções relacionadas com o sistema operativo (ex: write, read)
 #include <unistd.h>
 
 /**
@@ -26,30 +28,31 @@ int length(char *str) {
 }
 
 /**
- * @brief Mostra o conteúdo de um ou mais ficheiros passados
- * por parâmetro
+ * @brief Mostra o conteúdo de um ou mais ficheiros passados por parâmetro.
  * @author João Ponte
  *
- * @details Este comando apresenta no ecrã o conteúdo
- * do ficheiro indicado como parâmetro. Caso o ficheiro não exista, o comando
- * avisa o utilizador que o ficheiro não existe;
+ * @details Este comando apresenta no ecrã o conteúdo do ficheiro ou ficheiros indicados como parâmetro.
+ *          Caso o ficheiro não exista, o comando avisa o utilizador que o mesmo não existe.
  *
- * @param argc número de parâmetros
- * @param argv parâmetros
+ * @param argc O número de parâmetros passados para o programa.
+ * @param argv Um array de strings contendo os parâmetros passados para o programa.
+ *             O primeiro elemento (índice 0) é o nome do programa em si.
+ *             Os elementos subsequentes contêm os nomes dos ficheiros a serem exibidos.
+ * @return 1 se pelo menos um ficheiro foi exibido com sucesso, ou -1 se nenhum ficheiro foi passado como parâmetro.
  */
 int main(int argc, char *argv[]) {
     char *caractere;
     int i, ficheiroOrigem, result = -1;
 
-    // Verifica a quantidade de parâmetro
+    // Verifica se foram passados parâmetros
     if (argc < 2) {
         write(STDERR_FILENO, "Erro: Não passou qualquer ficheiro como parâmetro!\n", 54);
         return -1;
     } else {
-        // Faz um loop ficheiro a ficheiro passado por parâmetro
+        // Loop pelos ficheiros passados por parâmetro
         for (i = 1; i < argc; i++) {
 
-            // Se nome do ficheiro for vazio
+            // Verifica se o nome do ficheiro não está vazio
             if (!argv[i]) {
                 write(STDERR_FILENO, "Erro: Não passou qualquer ficheiro como parâmetro!\n", 54);
                 continue;
@@ -58,7 +61,7 @@ int main(int argc, char *argv[]) {
             // Abre o ficheiro para leitura
             ficheiroOrigem = open(argv[i], O_RDONLY);
 
-            // Ficheiro não existe
+            // Verifica se o ficheiro existe
             if (ficheiroOrigem < 0) {
                 write(STDERR_FILENO, "Erro: ", 6);
                 write(STDERR_FILENO, argv[i], length(argv[i]));
@@ -66,19 +69,22 @@ int main(int argc, char *argv[]) {
                 continue;
             }
 
-            // Lê o conteudo do cada arquivo caractere por caractere
+            // Lê e apresenta o conteúdo de cada ficheiro caractere por caractere
             while (read(ficheiroOrigem, &caractere, 1)) {
                 write(STDOUT_FILENO, &caractere, 1);
             }
 
-            // Dá uma quebra de linha no final de cada ficheiro
+            // Insere uma quebra de linha no final de cada ficheiro
             write(STDOUT_FILENO, "\n", 1);
 
             // Fecha o ficheiro
             close(ficheiroOrigem);
 
+            // Define o resultado como 1 para indicar o sucesso do comando
             result = 1;
         }
+
+        // Retorna o resultado
         return result;
     }
 }
