@@ -111,7 +111,7 @@ int main(){
             
             int filho = execvp(argumentos[0], argumentos);//vai executar o que comando que foi passado e todos os argumentos
             write(STDERR_FILENO, "Comando não foi encontrado\n", 29);
-
+            exit(EXIT_FAILURE);
         }else if(pid > 0){
             //Processo pai, a nossa sheel
             //Tem de esperar que o filho termine
